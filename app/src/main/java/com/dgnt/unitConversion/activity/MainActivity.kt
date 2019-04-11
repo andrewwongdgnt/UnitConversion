@@ -1,23 +1,46 @@
 package com.dgnt.unitConversion.activity
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.dgnt.unitConversion.R
+import com.dgnt.unitConversion.model.unit.EquivalentUnit
+import com.dgnt.unitConversion.model.unit.Unit
+import com.dgnt.unitConversion.model.unit.UnitGroup
+import com.dgnt.unitConversion.service.CalculatorService
+import com.dgnt.unitConversion.service.ConversionService
+import com.dgnt.unitConversion.service.UnitGeneratorService
+import com.github.salomonbrys.kodein.KodeinInjector
+import com.github.salomonbrys.kodein.android.AppCompatActivityInjector
+import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
+import java.io.InputStream
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+
+
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AppCompatActivityInjector {
+    override val injector: KodeinInjector = KodeinInjector()
+
+    private val conversionService: ConversionService by instance()
+
+    private val calculatorService: CalculatorService by instance()
+    private val unitGeneratorService: UnitGeneratorService by instance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializeInjector()
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -30,6 +53,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        val jsonString = resources.openRawResource(R.raw.default_units).readBytes().toString(Charsets.UTF_8)
+
+       val units = unitGeneratorService.generateUnitsFromJsonString(jsonString)
+
+        val firstUnit = units[4]
+        val secondUnit = units[0]
+
+        val conversion = conversionService.getEquivalentValue(firstUnit, secondUnit)
+
+        textView3.setText("1 ${secondUnit.name} is equivalent to $conversion ${firstUnit.name}")
     }
 
     override fun onBackPressed() {
@@ -50,9 +84,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -81,5 +115,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onDestroy() {
+        destroyInjector()
+        super.onDestroy()
     }
 }

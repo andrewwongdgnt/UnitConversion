@@ -1,12 +1,12 @@
 package com.dgnt.unitConversion
 
 import android.util.Log
-import com.dgnt.unitConversion.exception.UnitCalculatorException
+import com.dgnt.unitConversion.exception.CalculatorException
 import com.dgnt.unitConversion.model.unit.EquivalentUnit
 import com.dgnt.unitConversion.model.unit.Unit
 import com.dgnt.unitConversion.model.unit.UnitGroup
-import com.dgnt.unitConversion.service.UnitCalculatorService
-import com.dgnt.unitConversion.service.UnitConversionService
+import com.dgnt.unitConversion.service.CalculatorService
+import com.dgnt.unitConversion.service.ConversionService
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -17,8 +17,8 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(Log::class, UnitConversionService::class)
-class UnitCalculatorServiceTest {
+@PrepareForTest(Log::class, ConversionService::class)
+class CalculatorServiceTest {
 
     private val currency: UnitGroup = UnitGroup("currency")
     private val penny: Unit = Unit("penny", "pn", currency)
@@ -29,9 +29,9 @@ class UnitCalculatorServiceTest {
     private val toonie: Unit = Unit("toonie", "$2", currency)
     private val fiveDollars: Unit = Unit("fiveDollars", "$5", currency)
 
-    private val mockUnitConversionService = PowerMockito.mock(UnitConversionService::class.java)
+    private val mockConversionService = PowerMockito.mock(ConversionService::class.java)
 
-    private val sut: UnitCalculatorService = UnitCalculatorService(mockUnitConversionService)
+    private val sut: CalculatorService = CalculatorService(mockConversionService)
 
     @Before
     fun setUp() {
@@ -44,14 +44,14 @@ class UnitCalculatorServiceTest {
         dollar.addNextUnits(EquivalentUnit(toonie, 2.0), EquivalentUnit(fiveDollars, 5.0))
 
 
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(penny, penny)).thenReturn(1.0)
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(penny, nickle)).thenReturn(5.0)
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(dollar, nickle)).thenReturn(0.05)
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(dollar, quarter)).thenReturn(0.25)
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(penny, penny)).thenReturn(1.0)
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(nickle, penny)).thenReturn(1.0/5.0)
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(nickle, nickle)).thenReturn(1.0)
-        PowerMockito.`when`(mockUnitConversionService.getEquivalentValue(dollar, penny)).thenReturn(1.0/100.0)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(penny, penny)).thenReturn(1.0)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(penny, nickle)).thenReturn(5.0)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(dollar, nickle)).thenReturn(0.05)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(dollar, quarter)).thenReturn(0.25)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(penny, penny)).thenReturn(1.0)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(nickle, penny)).thenReturn(1.0/5.0)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(nickle, nickle)).thenReturn(1.0)
+        PowerMockito.`when`(mockConversionService.getEquivalentValue(dollar, penny)).thenReturn(1.0/100.0)
     }
 
     @Test
@@ -97,12 +97,12 @@ class UnitCalculatorServiceTest {
     }
 
 
-    @Test(expected = UnitCalculatorException::class)
+    @Test(expected = CalculatorException::class)
     fun testInvalidExpression() {
         sut.calculate("6'pn'++7'pn'", mutableListOf(penny), dollar)
     }
 
-    @Test(expected = UnitCalculatorException::class)
+    @Test(expected = CalculatorException::class)
     fun testInvalidExpression2() {
         sut.calculate("((6'pn')*8+7'pn'", mutableListOf(penny), dollar)
     }

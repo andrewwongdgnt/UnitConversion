@@ -1,12 +1,12 @@
 package com.dgnt.unitConversion.service
 
 import android.util.Log
-import com.dgnt.unitConversion.exception.UnitConversionException
+import com.dgnt.unitConversion.exception.ConversionException
 import com.dgnt.unitConversion.model.unit.Unit
 
-class UnitConversionService {
+class ConversionService {
 
-    @Throws(UnitConversionException::class)
+    @Throws(ConversionException::class)
     fun getEquivalentValue(fromUnit: Unit, toUnit: Unit): Double {
 
         if (fromUnit == toUnit)
@@ -36,12 +36,12 @@ class UnitConversionService {
         when (equivalentValue) {
             0.0 -> {
                 val msg = "toUnit: $toUnit is not related to fromUnit: $fromUnit"
-                val unitConversionException = UnitConversionException(msg)
-                Log.e(UnitConversionService::class.java.toString(), msg, unitConversionException)
+                val unitConversionException = ConversionException(msg)
+                Log.e(ConversionService::class.java.toString(), msg, unitConversionException)
                 throw unitConversionException
             }
             else -> {
-                Log.i(UnitConversionService::class.java.toString(), "toUnit: $toUnit is equal to $equivalentValue fromUnit: $fromUnit")
+                Log.i(ConversionService::class.java.toString(), "toUnit: $toUnit is equal to $equivalentValue fromUnit: $fromUnit")
                 return equivalentValue
             }
         }

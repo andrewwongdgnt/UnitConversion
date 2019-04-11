@@ -1,0 +1,68 @@
+[
+  {
+    "group": {
+      "name": "Currency"
+    },
+    "units": [
+      {
+        "name": "Penny",
+        "shortName": "pn",
+        "next": [
+          {
+            "name": "Nickle",
+            "equivalence": 5.0
+          }
+        ]
+      },
+      {
+        "name": "Nickle",
+        "shortName": "nc",
+        "group": "Currency",
+        "next": [
+          {
+            "name": "Dime",
+            "equivalence": 2.0
+          }
+        ]
+      },
+      {
+        "name": "Dime",
+        "shortName": "dm",
+        "group": "Currency",
+        "next": [
+          {
+            "name": "Quarter",
+            "equivalence": 2.5
+          }
+        ]
+      },
+      {
+        "name": "Quarter",
+        "shortName": "qr",
+        "group": "Currency",
+        "next": [
+          {
+            "name": "Dollar",
+            "equivalence": 4.0
+          }
+        ]
+      },
+      {
+        "name": "Dollar",
+        "shortName": "dl",
+        "group": "Currency",
+        "next": [
+          {
+            "name": "Toonie",
+            "equivalence": 2.0
+          }
+        ]
+      },
+      {
+        "name": "Toonie",
+        "shortName": "tn",
+        "group": "Currency"
+      }
+    ]
+  }
+]
