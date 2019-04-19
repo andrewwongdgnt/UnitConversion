@@ -2,16 +2,18 @@ package com.dgnt.unitConversion.activity
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.*
 import com.dgnt.unitConversion.R
-import com.dgnt.unitConversion.model.unit.EquivalentUnit
 import com.dgnt.unitConversion.model.unit.Unit
-import com.dgnt.unitConversion.model.unit.UnitGroup
 import com.dgnt.unitConversion.service.CalculatorService
 import com.dgnt.unitConversion.service.ConversionService
 import com.dgnt.unitConversion.service.UnitGeneratorService
@@ -20,10 +22,6 @@ import com.github.salomonbrys.kodein.android.AppCompatActivityInjector
 import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
-import java.io.InputStream
-
-
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AppCompatActivityInjector {
@@ -33,7 +31,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val calculatorService: CalculatorService by instance()
     private val unitGeneratorService: UnitGeneratorService by instance()
+    private lateinit var arrayAdapter: ArrayAdapter<Unit>
+    private lateinit var unitLayoutContainerVertical: LinearLayout
+    private lateinit var focusedView:View
 
+    private data class UnitLayout(val valueEditText: EditText, val unitSpinner: Spinner)
+
+    private val unitLayoutMap = mutableMapOf<View, UnitLayout>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +46,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        fab.setOnClickListener { _ ->
+            addUnitLayout()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -56,14 +59,101 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val jsonString = resources.openRawResource(R.raw.default_units).readBytes().toString(Charsets.UTF_8)
 
-       val units = unitGeneratorService.generateUnitsFromJsonString(jsonString)
+        val units = unitGeneratorService.generateUnitsFromJsonString(jsonString)
 
+        unitLayoutContainerVertical = findViewById(R.id.unit_layout_container_ll)
+
+        arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, units)
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+       val firstView:View = addUnitLayout()
+        focusedView = firstView
+
+        /*
         val firstUnit = units[4]
         val secondUnit = units[0]
 
         val conversion = conversionService.getEquivalentValue(firstUnit, secondUnit)
 
+
         textView3.setText("1 ${secondUnit.name} is equivalent to $conversion ${firstUnit.name}")
+        */
+    }
+
+    private fun addUnitLayout():View {
+        val view = LayoutInflater.from(this).inflate(R.layout.layout_unit, null)
+        val deleteUnitLayoutIV = view.findViewById<ImageView>(R.id.delete_unit_layout_iv)
+        deleteUnitLayoutIV.setOnClickListener {
+            unitLayoutContainerVertical.removeView(view)
+            unitLayoutMap.remove(view)
+        }
+
+        val unitSpinner = view.findViewById<Spinner>(R.id.unit_spinner)
+        unitSpinner.adapter = arrayAdapter
+
+        val valueET = view.findViewById<EditText>(R.id.value_et)
+        valueET.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                if (currentFocus!=valueET)
+                    return
+
+                s?.let {
+                    it.toString().toDoubleOrNull()?.let {theValue ->
+                        convertEverything(theValue, unitSpinner.selectedItem as Unit)
+                    }
+                }
+
+            }
+
+        })
+        valueET.setOnFocusChangeListener{_,isFocus ->
+            if (isFocus){
+                focusedView = view
+            }
+        }
+
+        unitSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                val unitLayoutOpt = unitLayoutMap[focusedView]
+                unitLayoutOpt?.let {unitLayout->
+                    unitLayout.valueEditText.text.toString().toDoubleOrNull()?.let {
+                        convertEverything(it, unitLayout.unitSpinner.selectedItem as Unit)
+                    }
+                }
+
+
+            }
+
+        }
+
+        unitLayoutContainerVertical.addView(view)
+        unitLayoutMap[view] = UnitLayout(valueET, unitSpinner)
+
+        return view
+
+    }
+
+    private fun convertEverything(value:Double, toUnit:Unit){
+        for ((_, unitLayout) in unitLayoutMap) {
+            val fromUnit =  unitLayout.unitSpinner.selectedItem as Unit
+            val convertedValue =  conversionService.getEquivalentValue(fromUnit, toUnit)
+            val currentValueEditText = unitLayout.valueEditText
+            val hasFocus = currentValueEditText.hasFocus()
+            if (!hasFocus)
+                currentValueEditText.setText("${value*convertedValue}")
+
+        }
     }
 
     override fun onBackPressed() {

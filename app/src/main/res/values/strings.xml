@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">UnitConversion</string>
+    <string name="app_name">Unit Conversion</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">andrew.wong.dgnt@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main">Converter</string>
+    <string name="unit_value_hint">Numeric value</string>
 </resources>
