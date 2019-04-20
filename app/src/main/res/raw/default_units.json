@@ -17,7 +17,6 @@
       {
         "name": "Nickle",
         "shortName": "nc",
-        "group": "Currency",
         "next": [
           {
             "name": "Dime",
@@ -28,7 +27,6 @@
       {
         "name": "Dime",
         "shortName": "dm",
-        "group": "Currency",
         "next": [
           {
             "name": "Quarter",
@@ -39,7 +37,6 @@
       {
         "name": "Quarter",
         "shortName": "qr",
-        "group": "Currency",
         "next": [
           {
             "name": "Dollar",
@@ -50,7 +47,6 @@
       {
         "name": "Dollar",
         "shortName": "dl",
-        "group": "Currency",
         "next": [
           {
             "name": "Toonie",
@@ -60,8 +56,48 @@
       },
       {
         "name": "Toonie",
-        "shortName": "tn",
-        "group": "Currency"
+        "shortName": "tn"
+      }
+    ]
+  },
+  {
+    "group": {
+      "name": "Distance"
+    },
+    "units": [
+      {
+        "name": "Millimeter",
+        "shortName": "mm",
+        "next": [
+          {
+            "name": "Centimeter",
+            "equivalence": 10.0
+          }
+        ]
+      },
+      {
+        "name": "Centimeter",
+        "shortName": "cm",
+        "next": [
+          {
+            "name": "Meter",
+            "equivalence": 100.0
+          }
+        ]
+      },
+      {
+        "name": "Meter",
+        "shortName": "m",
+        "next": [
+          {
+            "name": "Kilometer",
+            "equivalence": 1000.0
+          }
+        ]
+      },
+      {
+        "name": "Kilometer",
+        "shortName": "km"
       }
     ]
   }

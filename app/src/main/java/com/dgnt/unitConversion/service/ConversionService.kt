@@ -37,7 +37,6 @@ class ConversionService {
             0.0 -> {
                 val msg = "toUnit: $toUnit is not related to fromUnit: $fromUnit"
                 val unitConversionException = ConversionException(msg)
-                Log.e(ConversionService::class.java.toString(), msg, unitConversionException)
                 throw unitConversionException
             }
             else -> {

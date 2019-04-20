@@ -23,6 +23,9 @@ data class Unit(var name: String, var shortName: String, var unitGroup: UnitGrou
         prevUnits.add(equivalentUnit)
     }
 
+    override fun toString(): String {
+        return name
+    }
 
 }
 

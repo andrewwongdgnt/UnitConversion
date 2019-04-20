@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.dgnt.unitConversion.R
+import com.dgnt.unitConversion.exception.ConversionException
 import com.dgnt.unitConversion.model.unit.Unit
 import com.dgnt.unitConversion.service.CalculatorService
 import com.dgnt.unitConversion.service.ConversionService
@@ -147,11 +148,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun convertEverything(value:Double, toUnit:Unit){
         for ((_, unitLayout) in unitLayoutMap) {
             val fromUnit =  unitLayout.unitSpinner.selectedItem as Unit
-            val convertedValue =  conversionService.getEquivalentValue(fromUnit, toUnit)
+            var textValue = ""
+            try {
+                val convertedValue = conversionService.getEquivalentValue(fromUnit, toUnit)
+                textValue = "${value * convertedValue}"
+
+            } catch (e: ConversionException){
+
+            }
             val currentValueEditText = unitLayout.valueEditText
             val hasFocus = currentValueEditText.hasFocus()
             if (!hasFocus)
-                currentValueEditText.setText("${value*convertedValue}")
+                currentValueEditText.setText(textValue)
 
         }
     }
