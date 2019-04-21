@@ -17,7 +17,7 @@ import com.dgnt.unitConversion.service.ConversionService
 import com.dgnt.unitConversion.service.UnitGeneratorService
 
 private const val CONVERSION_SERVICE_PARAM = "conversionServiceParam"
-private const val UNIT_GENERATOR_SERVICE_PARAM = "param2"
+private const val UNIT_GENERATOR_SERVICE_PARAM = "unitGeneratorServiceParam"
 
 class ConverterFragment : Fragment() {
 
@@ -32,7 +32,7 @@ class ConverterFragment : Fragment() {
 
     private val unitLayoutMap = mutableMapOf<View, UnitLayout>()
 
-    private lateinit var fragContext:Context
+    private lateinit var fragContext: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,11 +64,11 @@ class ConverterFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_converter, container, false)
     }
 
-    fun addUnitLayoutS(){
+    fun addUnitLayoutS() {
         addUnitLayout(fragContext)
     }
 
-    private fun addUnitLayout(context:Context): View {
+    private fun addUnitLayout(context: Context): View {
         val view = LayoutInflater.from(context).inflate(R.layout.layout_unit, null)
         val deleteUnitLayoutIV = view.findViewById<ImageView>(R.id.delete_unit_layout_iv)
         deleteUnitLayoutIV.setOnClickListener {
@@ -90,7 +90,7 @@ class ConverterFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                if (activity?.currentFocus?.equals(valueET)!=true)
+                if (activity?.currentFocus?.equals(valueET) != true)
                     return
 
                 s?.let {

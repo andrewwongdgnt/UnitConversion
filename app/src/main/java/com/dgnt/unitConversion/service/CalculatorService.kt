@@ -1,12 +1,14 @@
 package com.dgnt.unitConversion.service
 
+import android.os.Parcelable
 import com.dgnt.unitConversion.exception.CalculatorException
 import com.dgnt.unitConversion.model.unit.Unit
+import kotlinx.android.parcel.Parcelize
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
-
-class CalculatorService(private val conversionService: ConversionService) {
+@Parcelize
+class CalculatorService(private val conversionService: ConversionService) : Parcelable {
 
     private val engine: ScriptEngine = ScriptEngineManager().getEngineByName("rhino")
 

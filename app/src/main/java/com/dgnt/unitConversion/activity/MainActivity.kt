@@ -19,6 +19,10 @@ import com.github.salomonbrys.kodein.android.AppCompatActivityInjector
 import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.support.v4.content.ContextCompat.getSystemService
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AppCompatActivityInjector {
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val calculatorService: CalculatorService by instance()
     private val unitGeneratorService: UnitGeneratorService by instance()
     private lateinit var converterFragment: ConverterFragment
+    private lateinit var calculatorFragment: CalculatorFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +56,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, getConverterFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, getConverterFragment()).commit()
 
     }
 
@@ -78,12 +83,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        fab.alpha = 1.0f
         when (item.itemId) {
             R.id.nav_converter -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, getConverterFragment()).commit()
             }
             R.id.nav_calculator -> {
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, CalculatorFragment()).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, getCalculatorFragment()).commit()
+                fab.alpha = 0.0f
+                val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(currentFocus.windowToken,0)
             }
 
             R.id.nav_editor -> {
@@ -103,6 +112,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             converterFragment = ConverterFragment.newInstance(conversionService, unitGeneratorService)
         }
         return converterFragment
+    }
+
+    private fun getCalculatorFragment(): CalculatorFragment {
+        if (!::calculatorFragment.isInitialized) {
+            calculatorFragment = CalculatorFragment.newInstance(calculatorService)
+        }
+        return calculatorFragment
     }
 
     override fun onDestroy() {
