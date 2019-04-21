@@ -1,11 +1,13 @@
 package com.dgnt.unitConversion.service
 
+import android.os.Parcelable
 import com.dgnt.unitConversion.model.unit.EquivalentUnit
 import com.dgnt.unitConversion.model.unit.Unit
 import com.dgnt.unitConversion.model.unit.UnitGroup
+import kotlinx.android.parcel.Parcelize
 import org.json.JSONArray
-
-class UnitGeneratorService() {
+@Parcelize
+class UnitGeneratorService() : Parcelable {
 
     data class EquivalentUnitInfo(val name: String, val equivalence: Double)
 

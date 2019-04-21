@@ -1,10 +1,13 @@
 package com.dgnt.unitConversion.service
 
+import android.os.Parcelable
 import android.util.Log
 import com.dgnt.unitConversion.exception.ConversionException
 import com.dgnt.unitConversion.model.unit.Unit
+import kotlinx.android.parcel.Parcelize
 
-class ConversionService {
+@Parcelize
+class ConversionService : Parcelable {
 
     @Throws(ConversionException::class)
     fun getEquivalentValue(fromUnit: Unit, toUnit: Unit): Double {

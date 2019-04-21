@@ -9,19 +9,10 @@
     tools:context=".activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/unit_layout_container_ll"
-            android:orientation="vertical">
-
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

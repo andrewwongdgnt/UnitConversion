@@ -1,12 +1,16 @@
 <resources>
-    <string name="app_name">Unit Conversion</string>
+    <string name="app_name">Unit Converter and Calculator</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_title">By Andrew Wong</string>
     <string name="nav_header_subtitle">andrew.wong.dgnt@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main">Converter</string>
+    <string name="title_converter">Converter</string>
+    <string name="title_calculator">Calculator</string>
+    <string name="title_editor">Edit Units</string>
     <string name="unit_value_hint">Numeric value</string>
-    <string name="title_activity_calculator">CalculatorActivity</string>
+    <string name="nav_subtitle_communicate">Communicate</string>
+    <string name="nav_menu_contact">Contact</string>
+
 </resources>
